@@ -6,7 +6,7 @@ Agent skills by **wesbrek**.
 
 | Skill | Description |
 |-------|-------------|
-| [`open‑pr`](./plugins/open-pr) | Open a GitHub PR for the current change — writes the title/description from the diff and embeds screenshots/videos inline via [`pr-media`](https://github.com/MatteoSchifano/gh-pr-media). |
+| [`open‑pr`](./skills/open-pr) | Open a GitHub PR for the current change — writes the title/description from the diff and embeds screenshots/videos inline via [`pr-media`](https://github.com/MatteoSchifano/gh-pr-media). |
 
 ## Install
 
