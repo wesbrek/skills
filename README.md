@@ -1,31 +1,41 @@
 # skills
 
-A collection of coding-agent skills, written to be **tool-agnostic**.
+A [Claude Code](https://claude.com/claude-code) plugin marketplace by **wesbrek**.
+Skills are written to be **tool-agnostic** so they also work in other agents/CLIs.
 
-## Skills
+## Plugins
 
-| Skill | Description |
-|-------|-------------|
-| [`open-pr`](./skills/open-pr) | Open a GitHub PR for the current change — writes the title/description from the diff and embeds screenshots/videos inline via [`pr-media`](https://github.com/MatteoSchifano/gh-pr-media). |
+| Plugin | Description |
+|--------|-------------|
+| [`open-pr`](./plugins/open-pr) | Open a GitHub PR for the current change — writes the title/description from the diff and embeds screenshots/videos inline via [`pr-media`](https://github.com/MatteoSchifano/gh-pr-media). |
 
-## Portability
+## Install (Claude Code)
 
-There is no single skill format every CLI reads, so each skill's body is plain,
-tool-neutral markdown — a procedure any agent can follow. Use it in your tool of
-choice:
+```shell
+/plugin marketplace add wesbrek/skills
+/plugin install open-pr@wesbrek
+/reload-plugins
+```
 
-- **Claude Code / skills-format tools** — copy the folder into `.claude/skills/`
-  (project) or `~/.claude/skills/` (global). The YAML frontmatter drives
-  auto-invocation. Invoke with `/open-pr` or by asking to open a PR.
+Then invoke with `/open-pr` (or just ask to open a pull request).
+
+## Install (other tools)
+
+There is no single skill format every CLI reads, so each skill's `SKILL.md`
+body is plain, tool-neutral markdown — a procedure any agent can follow.
+
+- **Copy into any project** (Claude Code standalone):
   ```bash
-  npx degit wesbrek/skills/skills/open-pr .claude/skills/open-pr
+  npx degit wesbrek/skills/plugins/open-pr .claude/skills/open-pr
   ```
-- **Cursor / Windsurf (rules)** — paste the skill body into a rule file
+- **Cursor / Windsurf (rules)** — paste the `SKILL.md` body into a rule file
   (e.g. `.cursor/rules/open-pr.mdc`); ignore the frontmatter.
-- **GitHub Copilot CLI / Codex / others** — reference the skill body from your
+- **Copilot CLI / Codex / others** — reference the `SKILL.md` body from your
   tool's instruction/prompt file, or paste it into an `AGENTS.md`.
-- **Any agent** — the steps are just prose + shell commands; point the model at
-  the `SKILL.md` body and it will follow them.
 
-The rule of thumb: the frontmatter is a convenience for tools that support it;
-the **body is the contract** and is portable everywhere.
+The frontmatter is a convenience for tools that support it; the **body is the
+portable contract**.
+
+## License
+
+[MIT](./LICENSE) © wesbrek

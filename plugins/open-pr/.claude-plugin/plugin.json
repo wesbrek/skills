@@ -1,0 +1,11 @@
+{
+  "name": "open-pr",
+  "description": "Open a GitHub PR for the current change — writes the title/description from the diff and embeds screenshots/videos inline via pr-media.",
+  "version": "1.0.0",
+  "author": {
+    "name": "wesbrek"
+  },
+  "homepage": "https://github.com/wesbrek/skills",
+  "repository": "https://github.com/wesbrek/skills",
+  "license": "MIT"
+}
