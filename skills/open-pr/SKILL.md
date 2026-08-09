@@ -1,6 +1,6 @@
 ---
 name: open-pr
-description: Open a GitHub PR for the current change — writes the title and description from the diff and embeds screenshots/videos inline via pr-media. Use when the user asks to open, create, submit, or raise a pull request, especially one that should include images or a video demo.
+description: Open a GitHub pull request for the current change, with screenshots or a video demo embedded inline in the description.
 ---
 
 # Open PR
@@ -8,23 +8,9 @@ description: Open a GitHub PR for the current change — writes the title and de
 Open a high-quality GitHub pull request for the current change, with images and
 videos embedded **inline** in the description.
 
-> **Tool-agnostic.** This file is written as a plain procedure so any coding
-> agent or CLI can follow it (Claude Code, and others). The frontmatter above is
-> for tools that read the "skills" format; tools that don't can ignore it and
-> just follow the steps. See `PORTABILITY` in the repo README for adapters.
-
-**Run this with full context of the change.** It needs the diff and the reasoning
-behind it. Do not hand it to a fresh/isolated agent that only sees the file — it
-would lose the "why" that makes a good PR description.
-
 ## Prerequisites
 
-- `gh` installed and authenticated (`gh auth status`). **Required.**
-- [`pr-media`](https://github.com/MatteoSchifano/gh-pr-media) for inline media —
-  **optional**. Install via `gh extension install MatteoSchifano/gh-pr-media` or
-  `npm i -g pr-media`. Inline **playing video** needs its `browser` strategy,
-  which drives an already-logged-in local browser, so it assumes a developer
-  machine, not headless CI. If `pr-media` is absent, still open the PR (see step 5).
+`gh` installed and authenticated (`gh auth status`).
 
 ## Process
 
@@ -32,9 +18,10 @@ would lose the "why" that makes a good PR description.
 
 - Confirm the current branch and the base branch (usually the repo default).
 - Read the diff against the base (`git diff <base>...HEAD`, `git log`, changed
-  files). Summarize what changed and, critically, **why**.
+  files). Summarize what changed and **why**, with every changed file accounted
+  for.
 - If the branch is the default branch, stop and offer to create a feature branch
-  first — never open a PR from an unrelated default branch.
+  first.
 - If there are uncommitted changes, ask whether to commit them first.
 
 ### 2. Gather media
@@ -63,29 +50,24 @@ gh pr create --base <base> --head <branch> --title "<title>" --body "<body>"
 
 Capture the PR URL from the output.
 
-### 5. Embed media inline (graceful if unavailable)
+### 5. Embed media inline
 
-If `pr-media` is installed, delegate the media step to it — do not reimplement
-the upload:
+[`pr-media`](https://github.com/MatteoSchifano/gh-pr-media) is **optional**. When
+it is installed, delegate the media step to it rather than reimplementing the
+upload:
 
 ```bash
 gh pr-media add <files...> --pr-url <pr-url> --to description
 ```
 
-- On a dev machine, prefer `--strategy browser` so video plays inline; `auto`
-  picks it outside CI.
+Prefer `--strategy browser` so video plays inline; it drives your already
+logged-in local browser, so it assumes a developer machine (`auto` picks it
+outside CI). That browser session is the credential — pass none of your own.
 
-If `pr-media` is **not** installed: the PR is already open — do not fail. Tell the
-user: "PR created. Install `pr-media` to embed images/video inline," and stop.
-The core value (a well-authored PR) must never be hostage to the media tool.
+When `pr-media` is missing, the PR is already open: tell the user "PR created.
+Install `pr-media` to embed images/video inline" (`gh extension install
+MatteoSchifano/gh-pr-media` or `npm i -g pr-media`), then stop.
 
 ### 6. Report
 
 Print the final PR URL and a one-line summary (title, files embedded, strategy).
-
-## Notes
-
-- `pr-media` never reads or stores your session cookie; the `browser` strategy
-  reuses your logged-in browser session. Never add a cookie-extraction step.
-- Authorship and media hosting are decoupled — it does not matter which account
-  uploads the media; the PR author is whoever `gh` is authenticated as.
